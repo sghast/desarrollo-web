@@ -47,5 +47,12 @@
     "precio": 415.6,
     "stock": 6,
     "categoria": "Electrónica"
+  },
+  {
+    "id": 8,
+    "nombre": "CPU DELL",
+    "precio": 12,
+    "stock": 3,
+    "categoria": "Electrónica"
   }
 ]

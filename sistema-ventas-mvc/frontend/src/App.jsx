@@ -1,121 +1,98 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useCallback, useEffect, useState } from 'react'
+import Encabezado from './components/Encabezado.jsx'
+import FormularioProducto from './components/FormularioProducto.jsx'
+import ProductoCard from './components/ProductoCard.jsx'
 import './App.css'
+import { obtenerProductos, registrarProducto } from './services/productoService.js'
 
-function App() {
-  const [count, setCount] = useState(0)
+const obtenerListadoProductos = async () => {
+  const resultado = await obtenerProductos()
+  if (!Array.isArray(resultado)) {
+    throw new Error('La respuesta del backend no tiene el formato esperado')
+  }
+  return resultado
+}
+
+function App () {
+  const [productos, setProductos] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
+  const [mensaje, setMensaje] = useState('')
+
+  const cargarProductos = useCallback(async () => {
+    setCargando(true)
+    setError('')
+
+    try {
+      setProductos(await obtenerListadoProductos())
+    } catch (error) {
+      console.error('Error al obtener productos:', error)
+      setError(error.response?.data?.mensaje ?? error.message ?? 'No fue posible conectarse al backend')
+    } finally {
+      setCargando(false)
+    }
+  }, [])
+
+  const manejarRegistro = async (producto) => {
+    setError('')
+    setMensaje('')
+
+    try {
+      await registrarProducto(producto)
+      setMensaje('Producto registrado correctamente.')
+      await cargarProductos()
+      return true
+    } catch (error) {
+      console.error('Error al registrar producto:', error)
+      setError(error.response?.data?.mensaje ?? error.message ?? 'No fue posible registrar el producto')
+      return false
+    }
+  }
+
+  useEffect(() => {
+    let activo = true
+
+    obtenerListadoProductos()
+      .then(resultado => {
+        if (activo) setProductos(resultado)
+      })
+      .catch(error => {
+        console.error('Error al obtener productos:', error)
+        if (activo) {
+          setError(error.response?.data?.mensaje ?? error.message ?? 'No fue posible conectarse al backend')
+        }
+      })
+      .finally(() => {
+        if (activo) setCargando(false)
+      })
+
+    return () => {
+      activo = false
+    }
+  }, [])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+    <main className="contenedor">
+      <Encabezado/>
+      <FormularioProducto onRegistrar={manejarRegistro} />
+      {mensaje && <p role="status">{mensaje}</p>}
+      <section aria-labelledby="productos-titulo">
+        <h2 id="productos-titulo">Lista de productos</h2>
+        <button onClick={cargarProductos} disabled={cargando}>
+          {cargando ? 'Cargando...' : 'Actualizar productos'}
         </button>
+        {error && <p role="alert">No se pudieron cargar los productos: {error}</p>}
+        {!error && cargando && <p role="status">Cargando productos...</p>}
+        {!error && !cargando && productos.length === 0 && <p>No hay productos disponibles.</p>}
+        {!error && productos.length > 0 && (
+          <div className="productos-grid">
+            {productos.map(producto => (
+              <ProductoCard key={producto.id} {...producto} />
+            ))}
+          </div>
+        )}
       </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </main>
   )
 }
 
