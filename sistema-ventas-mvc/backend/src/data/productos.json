@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "nombre": "Laptop Gamer Pro",
+    "precio": 1999.99,
+    "stock": 15,
+    "categoria": "Electrónica"
+  },
+  {
+    "id": 2,
+    "nombre": "Mouse Inalámbrico Ergonómico",
+    "precio": 24.99,
+    "stock": 27,
+    "categoria": "Accesorios"
+  },
+  {
+    "id": 3,
+    "nombre": "Teclado Mecánico RGB",
+    "precio": 74.99,
+    "stock": 11,
+    "categoria": "Accesorios"
+  },
+  {
+    "id": 4,
+    "nombre": "Cinta de luces LED multicolor",
+    "precio": 14.99,
+    "stock": 2,
+    "categoria": "Decoración"
+  },
+  {
+    "id": 5,
+    "nombre": "Laptop HP básica",
+    "precio": 144.99,
+    "stock": 12,
+    "categoria": "Electrónica"
+  },
+  {
+    "id": 6,
+    "nombre": "Lámpara de escritorio",
+    "precio": 17.99,
+    "stock": 9,
+    "categoria": "Decoración"
+  },
+  {
+    "id": 7,
+    "nombre": "PS4",
+    "precio": 415.6,
+    "stock": 6,
+    "categoria": "Electrónica"
+  }
+]

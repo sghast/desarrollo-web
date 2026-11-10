@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas</title>
+</head>
+<body>
+
+    <header>
+        <h1>Sistema de Ventas</h1>
+        <p>Catálogo de productos y carrito de compras</p>
+    </header>
+    <main>
+        <section>
+            <h2>Catálogo de productos</h2>
+            <label for="clienteHttp">Cliente HTTP:</label>
+            <select id="clienteHttp">
+                <option value="fetch">Fetch API</option>
+                <option value="axios">Axios</option>
+            </select>
+            <button id="btnConsultar">
+                Consultar productos
+            </button>
+            <label for="busqueda">Buscar producto:</label>
+            <input
+                type="text"
+                id="busqueda"
+                placeholder="Ingrese el nombre"
+            >
+            <p id="estado"></p>
+            <div id="catalogo" class="catalogo"></div>
+        </section>
+        <section>
+            <h2>Carrito de compras</h2>
+            <div id="carrito"></div>
+            <h3>Resumen de compra</h3>
+            <p>Subtotal: $<span id="subtotal">0.00</span></p>
+            <p>Descuento: $<span id="descuento">0.00</span></p>
+            <p>Total: $<span id="total">0.00</span></p>
+            <button id="btnVaciar">
+                Vaciar carrito
+            </button>
+            <button id="btnComprar">
+                Finalizar compra
+            </button>
+            <p id="mensajeVenta"></p>
+        </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
