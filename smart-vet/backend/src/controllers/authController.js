@@ -102,10 +102,25 @@ const logIn = async (req, res) => {
             }
         });
     } catch (error) {
+        console.error('Error al iniciar sesión:', error);
         res.status(500).json({
             error: 'Error al iniciar sesión'
         });
     }
 };
 
-export { registerUser, logIn };
+const getProfile = async (req, res) => {
+    const usuario = req.usuario;
+
+    res.json({
+        user: {
+            id: usuario._id,
+            name: usuario.name,
+            email: usuario.email,
+            role: usuario.role,
+            status: req.usuario.status
+        }
+    })
+}
+
+export { registerUser, logIn, getProfile };
