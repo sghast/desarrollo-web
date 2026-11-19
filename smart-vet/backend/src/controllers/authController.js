@@ -88,7 +88,7 @@ const logIn = async (req, res) => {
                 error: 'La cuenta está desactivada'
             });
         }
-
+ 
         const token = generarToken(usuario);
 
         res.status(200).json({
